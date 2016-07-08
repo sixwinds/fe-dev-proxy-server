@@ -34,9 +34,9 @@ let CommonUtils = {
   },
   parseTarget( req, routeOption ) {
     let reqUrl = req.url;
-    let routeUrl = routeOption.url;
+    let routeUrlRegExp = routeOption.url;
     // TODO
-    
+    let matches = routeUrlRegExp.exec( reqUrl );
   },
   parseProxyReqOption( incomingMessage, routeOption ) {
     let target = routeOption.target;

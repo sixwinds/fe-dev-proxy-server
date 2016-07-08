@@ -1,0 +1,1 @@
+1. 写到parse target，根据url的正则拼出正确的target

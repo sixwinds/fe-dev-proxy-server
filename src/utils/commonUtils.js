@@ -32,11 +32,15 @@ let CommonUtils = {
     }
     return false;
   },
-  parseTarget( req, routeOption ) {
+  parseTarget( req, routeOption ) { 
     let reqUrl = req.url;
     let routeUrlRegExp = routeOption.url;
-    // TODO
     let matches = routeUrlRegExp.exec( reqUrl );
+    if ( matches[1] ) {
+      return routeOption.replace( '[path]', matches[1] );
+    } else {
+      routeOption.target;
+    }
   },
   parseProxyReqOption( incomingMessage, routeOption ) {
     let target = routeOption.target;

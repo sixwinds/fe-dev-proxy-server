@@ -68,7 +68,7 @@ class Rounter {
     let currRouteOptioin = extend( {}, routeOption );
     if ( CommonUtils.type(routeOption.url) === Types.RegExp ) {
       extend( currRouteOptioin, {
-        target: CommonUtils.parseTarget( req, routeOption )
+        target: CommonUtils.parseTarget( req.url, routeOption.url, routeOption.target, routeOption.static )
       } );
     }
     // handler dispactch

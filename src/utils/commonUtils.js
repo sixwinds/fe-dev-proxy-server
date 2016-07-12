@@ -19,10 +19,6 @@ let CommonUtils = {
       return typeof v;
     }
   },
-  isUrl( target ) {
-    let urlObject = Url.parse( target );
-    return urlObject.protocol || urlObject.slashes || urlObject.host || urlObject.port;
-  },
   isUrlMatched( req, routeOption ) {
     let routeUrl = routeOption.url;
     if ( this.type(routeUrl) === Types.String ) {
@@ -32,20 +28,20 @@ let CommonUtils = {
     }
     return false;
   },
-  parseTarget( req, routeOption ) { 
-    let reqUrl = req.url;
-    let routeUrlRegExp = routeOption.url;
+  parseTarget( reqUrl, routeUrlRegExp, targetPatten, isStatic ) {
+    let questionMarkIndex = reqUrl.indexOf( '?' );
+    reqUrl = (isStatic && questionMarkIndex>=0) ? reqUrl.substring( 0, questionMarkIndex ) : reqUrl;
     let matches = routeUrlRegExp.exec( reqUrl );
+
     if ( matches[1] ) {
-      return routeOption.replace( '[path]', matches[1] );
+      return targetPatten.replace( '[path]', matches[1] );
     } else {
-      routeOption.target;
+      return targetPatten;
     }
   },
   parseProxyReqOption( incomingMessage, routeOption ) {
-    let target = routeOption.target;
-    let urlObject = Url.parse( target );
-    let targetPath = urlObject.path === '/**' ? incomingMessage.url : (urlObject.path + (urlObject.hash || ''))
+    let urlObject = Url.parse( routeOption.target );
+    // let targetPath = urlObject.path === '/**' ? incomingMessage.url : (urlObject.path + (urlObject.hash || ''))
     return {
       protocol: urlObject.protocol,
       host: urlObject.host,
@@ -54,7 +50,7 @@ let CommonUtils = {
       // localAddress: ?,
       // socketPath: ?,
       method: incomingMessage.method,
-      path: targetPath,
+      path: urlObject.path,
       auth: urlObject.auth,
       agent: false,
       headers: extend( {}, incomingMessage.headers )

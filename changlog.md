@@ -1,1 +1,4 @@
-1. 写到parse target，根据url的正则拼出正确的target
+2016-07-12: add bdd test and finish http to http proxy ( url and static resource )
+
+// TODO
+1. mock json data response

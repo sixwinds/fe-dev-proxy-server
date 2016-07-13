@@ -8,6 +8,7 @@ let CommonUtils = require( './utils/commonUtils' );
 let ForwardHandler = require( './requestHandlers/forwardHandler' );
 let ResourceHandler = require( './requestHandlers/resourceHandler' );
 let ResponseStatusHandler = require( './requestHandlers/responseStatusHandler' );
+let WebSocketHandler = require( './requestHandler/webSocketHandler' );
 /*
 routes: [{
         url: '/positions',
@@ -39,7 +40,19 @@ interface routeOption {
 */
 class Rounter {
   constructor( routes ) {
-    this.routes = routes || [];
+    this.init( routes||[] );
+  }
+
+  init( routes ) {
+    this.routes = [];
+    this.wsRoutes = [];
+    routes.forEach( r=>{
+      if ( r.ws ) {
+        this.wsRoutes.push( r );
+      } else {
+        this.routes.push( r );
+      }
+    } )
   }
 
   dispatch( req, res ) {
@@ -59,6 +72,12 @@ class Rounter {
       }
     }
     if ( !matched ) ResponseStatusHandler.notFound( req, res );
+  }
+
+  dispatchWs( req, socket, head ) {
+    this.wsRoutes.forEach( routeOption=>{
+      WebSocketHandler.handle( req, socket, head, routeOption );
+    } )
   }
 
   handleRequest( req, res, routeOption ) {

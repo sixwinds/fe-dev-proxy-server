@@ -43,6 +43,9 @@ class DevServer {
     this.proxyServer = http.createServer( function(req, res) {
       r.dispatch( req, res );
     } );
+    this.proxyServer.on( 'upgrade', function( req, socket, head ) {
+        r.dispatchWs( req, socket, head );
+    } );
     this.proxyServer.listen( port );
   }
 }
